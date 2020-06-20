@@ -1,13 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_net.h>
-
-// The following code example is placed in the public domain.
-//
-// Read more about SDLNet from the offical docs at http://sdl.beuc.net/sdl.wiki/SDL_net
-//
-// Decent simple tutorial on UDP with SDL_net http://headerphile.com/sdl2/sdl2-part-12-multiplayer/
-//
-// ~ tom 2017-08-27
+#include <iostream>
 
 // "127.0.0.1" represents localhost
 #define SERVERIP "127.0.0.1"
@@ -30,21 +23,18 @@ int main()
 
 	// Open the desired port
 	UDPsocket socket = SDLNet_UDP_Open( CLIENTPORT );
-	if( socket == NULL )
-	{
+	if(socket == NULL){
 		SDL_Log("Failed SDLNet_UDP_Open: %s", SDLNet_GetError());
 		return 2;
 	}
-	else
-	{
+	else{
 		SDL_Log("Opened UDP connection on port %i", CLIENTPORT);
 	}
 
 	// Ask SDLNet to allocate a packet for us with a given size
 	const int PACKET_SIZE = 256;
 	UDPpacket* packet = SDLNet_AllocPacket(PACKET_SIZE);
-	if( packet == NULL )
-	{
+	if(packet == NULL){
 		SDL_Log("Failed SDLNet_AllockPacket: %s", SDLNet_GetError());
 		return 4;
 	}
@@ -53,8 +43,7 @@ int main()
 	// but it is a nice way of setting up our address structure which we will use
 	// in later functions for sending data
 	IPaddress destAddress;
-	if( SDLNet_ResolveHost( &destAddress, SERVERIP, SERVERPORT ) )
-	{
+	if( SDLNet_ResolveHost(&destAddress, SERVERIP, SERVERPORT)){
 		SDL_Log("Failed SDLNet_ResolveHost: %s", SDLNet_GetError());
 		return 3;
 	}
@@ -67,15 +56,23 @@ int main()
 	packet->address.host = destAddress.host;
 	packet->address.port = destAddress.port;
 
+
+
+
 	// Fill the packet with data
-	const char data[] = "11111111";
-    // Uint8 data = 11111111;
+	const char data[] = "123456123456000000000000000000000000000000000000123456123456000000000000000000000000000000000000";
     // packet->data=&data;
 	strcpy((char*)packet->data, data);
-	packet->len = sizeof(data);
+    
+    std::cout<<packet->data<<std::endl;
+    //std::cout<<sizeof(packet->data)<<std::endl;
+	
 
+
+    
+    packet->len = sizeof(data);
 	// Send the packet!
-	SDLNet_UDP_Send( socket, -1, packet );
+    SDLNet_UDP_Send( socket, -1, packet );
 
 	// Cleanup
 	SDLNet_FreePacket( packet ); // Don't forget to free the packet!

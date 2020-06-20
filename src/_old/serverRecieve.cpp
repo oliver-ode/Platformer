@@ -7,7 +7,7 @@
 // This is the port that we, the server, shall use to listen for and send packets on
 #define SERVERPORT 1616
 
-#define min(val1, val2) (val1 > val2 ? val2 : val1)
+// #define min(val1, val2) (val1 > val2 ? val2 : val1)
 
 int main(){
 	if(SDLNet_Init()){
@@ -47,6 +47,8 @@ int main(){
 			// Print out the contents of the packet
 			//SDL_Log( "Data: \"%s\"", packet->data );
             std::cout<<"Data: "<<packet->data<<std::endl;
+
+            int holder = (int)packet->data;
 
             if(packet->data==&shutdownSignal){
                 // Set shutdown to true so we can exit the loop
