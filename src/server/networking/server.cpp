@@ -105,29 +105,25 @@ namespace server {
 
             float speed = 0.8f;
             float s = speed;
-            if (isPressed(KeyInput::Forwards)) {
+            if (isPressed(KeyInput::Right)) {
                 /* velocity.x += -glm::cos(glm::radians(rotation.y + 90)) * s;
                 velocity.z += -glm::sin(glm::radians(rotation.y + 90)) * s; */
             }
-            else if (isPressed(KeyInput::Back)) {
+            else if (isPressed(KeyInput::Left)) {
                 /* velocity.x += glm::cos(glm::radians(rotation.y + 90)) * speed;
                 velocity.z += glm::sin(glm::radians(rotation.y + 90)) * speed; */
             }
-            if (isPressed(KeyInput::Left)) {
+            if (isPressed(KeyInput::Up)) {
                 /* velocity.x += -glm::cos(glm::radians(rotation.y)) * speed;
                 velocity.z += -glm::sin(glm::radians(rotation.y)) * speed; */
             }
-            else if (isPressed(KeyInput::Right)) {
+            else if (isPressed(KeyInput::Down)) {
                 /* velocity.x += glm::cos(glm::radians(rotation.y)) * speed;
                 velocity.z += glm::sin(glm::radians(rotation.y)) * speed; */
             }
             position += velocity * dt;
             velocity *= 0.85f;
             // entity.transform.rotation.y += 1;
-        }
-
-        for (u16 i = m_maxConnections; i < m_entities.size(); i++) {
-            
         }
     }
 

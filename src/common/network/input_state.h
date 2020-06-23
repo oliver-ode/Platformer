@@ -3,8 +3,8 @@
 #include "../types.h"
 
 enum KeyInput : Input {
-    Forwards = 1,
-    Back = 2,
-    Left = 4,
-    Right = 8,
+    Right = 1,
+    Left = 2,
+    Up = 4,
+    Down = 8,
 };

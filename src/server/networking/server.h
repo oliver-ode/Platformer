@@ -40,7 +40,7 @@ namespace server {
         void sendToAllClients(sf::Packet &packet); // Sends a certain packet to all clients
         bool getFromClient(PackagedCommand &package); // Checks if the socket has recieved any packets and stores the packet in package.command and returns true
 
-        void handleIncomingConnection(const sf::IpAddress &address, Port port);
+        void handleIncomingConnection(const sf::IpAddress &address, Port port); // Deals with incoming connections and sends out information to clients
 
         void handleDisconnect(sf::Packet &packet); // Removes client associations with the server and sends a player leave packet to all clients
         void handleKeyInput(sf::Packet &packet); // Gets the key input and resultant mouse movement and stores it in memory

@@ -6,22 +6,22 @@
 #include <common/network/commands.h>
 #include <common/network/input_state.h>
 
-//#include "../game/entity.h"
+#include <client/game/entity.h>
 
 namespace client {
     class Client final {
       public:
         Client(EntityArray &entites);
-        bool connect(const sf::IpAddress &address);
-        void disconnect();
+        bool connect(const sf::IpAddress &address); // Creates a connection request and sends to the server and configures settings if a connection slot is allocated
+        void disconnect(); // Creates a disconnect packet and sends it to the server
 
-        void sendInput(Input input, const glm::vec3 &rotation);
-        void update();
+        void sendInput(Input input, const glm::vec3 &rotation); // Sends key input and rotation values
+        void update(); // Checks for packet from server and uses switch for figure out what handler to use
 
-        bool isConnected() const;
+        bool isConnected() const; // Returns if the client is connected to the server
 
-        ClientId getClientId() const;
-        u8 getMaxPlayers() const;
+        ClientId getClientId() const; // Returns the client ID
+        u8 getMaxPlayers() const; // Returns the max amount of players allowed on the server
 
       private:
         struct PackagedCommand {
@@ -29,12 +29,12 @@ namespace client {
             CommandToClient command;
         };
 
-        bool sendToServer(sf::Packet &packet);
-        bool getFromServer(PackagedCommand &package);
+        bool sendToServer(sf::Packet &packet); // Sends a packet to the server and returns if it was successful
+        bool getFromServer(PackagedCommand &package); // Checks if there is a packet ready to be recieved and then stores it in a package and returns true
 
-        void handleWorldState(sf::Packet &packet);
-        void handlePlayerJoin(sf::Packet &packet);
-        void handlePlayerLeave(sf::Packet &packet);
+        void handleWorldState(sf::Packet &packet); // Unpacks packet with worldstate data (position, rotations)
+        void handlePlayerJoin(sf::Packet &packet); // Configures entity array to set new player ID to alive
+        void handlePlayerLeave(sf::Packet &packet); // Configures entity array to set new player ID to dead
 
         sf::UdpSocket m_socket;
         sf::IpAddress m_serverIpAddress;
