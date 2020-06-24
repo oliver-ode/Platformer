@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "../../input/keyboard.h"
-#include "../renderer/renderer.h"
+#include "../../renderer/renderer.h"
 #include "state_handler.h"
 
 #include <SDL2/SDL.h>
