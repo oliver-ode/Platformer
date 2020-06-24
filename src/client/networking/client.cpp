@@ -11,10 +11,10 @@ namespace client {
     {
     }
 
-    void Client::sendInput(Input input, const glm::vec3 &rotation)
+    void Client::sendInput(Input input)
     {
         auto inputStatePacket = createCommandPacket(CommandToServer::KeyInput);
-        inputStatePacket << m_clientId << input << rotation.x << rotation.y;
+        inputStatePacket << m_clientId << input;
         sendToServer(inputStatePacket);
     }
 
@@ -129,20 +129,8 @@ namespace client {
             EntityId id;
             packet >> id;
             auto &entity = mp_entities[id];
-            auto &transform = entity.transform;
 
             entity.alive = true;
-            packet >> transform.position.x;
-            packet >> transform.position.y;
-            packet >> transform.position.z;
-            float rotx, roty;
-            packet >> rotx;
-            packet >> roty;
-
-            if (id != m_clientId) {
-                transform.rotation.x = rotx;
-                transform.rotation.y = roty;
-            }
         }
     }
 

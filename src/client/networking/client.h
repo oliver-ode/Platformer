@@ -15,7 +15,7 @@ namespace client {
         bool connect(const sf::IpAddress &address); // Creates a connection request and sends to the server and configures settings if a connection slot is allocated
         void disconnect(); // Creates a disconnect packet and sends it to the server
 
-        void sendInput(Input input, const glm::vec3 &rotation); // Sends key input and rotation values
+        void sendInput(Input input); // Sends key input
         void update(); // Checks for packet from server and uses switch for figure out what handler to use
 
         bool isConnected() const; // Returns if the client is connected to the server
