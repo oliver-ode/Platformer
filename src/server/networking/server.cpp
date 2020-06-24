@@ -97,7 +97,6 @@ namespace server {
             auto &entity = m_entities[i];
             auto &position = entity.transform.position;
             auto &velocity = entity.velocity;
-            auto &rotation = entity.transform.rotation;
 
             auto isPressed = [input](KeyInput key) {
                 return (input & key) == key;
@@ -123,7 +122,6 @@ namespace server {
             }
             position += velocity * dt;
             velocity *= 0.85f;
-            // entity.transform.rotation.y += 1;
         }
     }
 
@@ -136,8 +134,7 @@ namespace server {
             if (m_entities[entityId].alive) {
                 auto &transform = m_entities[entityId].transform;
                 statePacket << entityId << transform.position.x
-                            << transform.position.y << transform.position.z
-                            << transform.rotation.x << transform.rotation.y;
+                            << transform.position.y << transform.position.z;
             }
         }
         sendToAllClients(statePacket);
@@ -149,8 +146,6 @@ namespace server {
 
         packet >> client;
         packet >> m_clientSessions[client].keyState;
-        packet >> m_entities[client].transform.rotation.x;
-        packet >> m_entities[client].transform.rotation.y;
     }
 
     bool Server::sendToClient(ClientId id, sf::Packet &packet)

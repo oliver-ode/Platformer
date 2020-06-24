@@ -12,7 +12,7 @@ namespace client{
             StateHandler();
 
             // Gets current state of game
-            GameState &peekState;
+            GameState &peekState();
 
             // Pushes a new state to the state handler
             template <typename State, typename... Args> void pushState(Args &&... args);

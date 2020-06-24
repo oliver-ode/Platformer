@@ -23,10 +23,10 @@ namespace client{
                 break;
         }
     }
-    bool Keyboard::keyDown(int keyCode){
+    bool Keyboard::isKeyDown(int keyCode){
         return m_keys[keyCode];
     }
-    bool Keyboard::keyReleased(int keyCode){
+    bool Keyboard::isKeyReleased(int keyCode){
         return m_recentlyReleased == keyCode;
     }
     void Keyboard::resetKeys(){
