@@ -2,8 +2,8 @@
 
 #include <SDL2/SDL.h>
 #include "input/keyboard.h"
-
-struct LaunchConfig;
+#include "game/state/state_handler.h"
+#include "renderer/renderer.h"
 
 namespace client{
     class Engine final{
@@ -13,7 +13,7 @@ namespace client{
                 Exit = 11,
                 GLInitError = 20,
             };
-            Engine(const LaunchConfig &config);
+            Engine();
             Status runClient();
         private:
             void handleWindowEvents();
@@ -23,8 +23,16 @@ namespace client{
 
             void exit();
 
-            SDL_Window *window;
-            SDL_Renderer *renderer;
+            SDL_Window *m_window;
+            SDL_Renderer *m_rendererSDL;
             Keyboard m_keyboard;
+            Status m_status;
+
+            StateHandler m_stateHandler;
+            GameState *mp_currentState = nullptr;
+
+            std::unique_ptr<Renderer> m_renderer;
+
+            bool m_fullscreen = false;
     };
 }
