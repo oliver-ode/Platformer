@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+#include <glm/glm.hpp>
+#include <SDL2/SDL.h>
+
 namespace client{
     class Entity;
 
@@ -16,6 +20,8 @@ namespace client{
 
             void process(const Entity &entity);
 
-            void render();
+            void render(SDL_Renderer &renderer);
+        private:
+            std::vector<glm::vec2> m_entities;
     };
 }

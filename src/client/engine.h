@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include "input/keyboard.h"
 
 struct LaunchConfig;
 
@@ -24,5 +25,6 @@ namespace client{
 
             SDL_Window *window;
             SDL_Renderer *renderer;
+            Keyboard m_keyboard;
     };
 }

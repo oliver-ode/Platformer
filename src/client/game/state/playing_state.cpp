@@ -47,7 +47,7 @@ namespace client{
 
     void PlayingState::render(Renderer &renderer){
         unsigned i = 0;
-        for(const auto &e:m_entities){
+        for(const auto &e : m_entities){
             if(e.alive && i++ != m_client.getClientId()){
                 renderer.process(e);
             }
