@@ -20,7 +20,7 @@ def index2d(ref):
 
 width, height = image.size
 
-f = open(imageName+".out", "w")
+f = open(imageName+".map", "w")
 
 s = ""
 
