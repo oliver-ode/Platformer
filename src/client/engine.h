@@ -4,6 +4,7 @@
 #include "input/keyboard.h"
 #include "game/state/state_handler.h"
 #include "renderer/renderer.h"
+#include "util/fps_counter.h"
 
 namespace client{
     class Engine final{
