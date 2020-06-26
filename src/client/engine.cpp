@@ -70,7 +70,29 @@ namespace client{
     }
 
     void Engine::handleWindowEvents(){
-
+        SDL_Event e;
+        while(SDL_PollEvent(&e)){
+            m_keyboard.update(e);
+            switch(e.type){
+                case SDL_KEYDOWN:
+                    mp_currentState->handleKeyDown(e.key.keysym.sym);
+                    switch(e.key.keysym.sym){
+                        case SDLK_ESCAPE:
+                            exit();
+                            break;
+                        default:
+                            break;
+                    }
+                case SDL_KEYUP:
+                    mp_currentState->handleKeyUp(e.key.keysym.sym);
+                    break;
+                case SDL_QUIT:
+                    exit();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     void Engine::exit(){
