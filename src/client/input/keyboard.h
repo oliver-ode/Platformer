@@ -10,8 +10,8 @@ namespace client{
             Keyboard();
 
             void update(SDL_Event e);
-            bool isKeyDown(int keyCode);
-            bool isKeyReleased(int keyCode);
+            bool isKeyDown(int keyCode) const;
+            bool isKeyReleased(int keyCode) const;
         private:
             void resetKeys();
 

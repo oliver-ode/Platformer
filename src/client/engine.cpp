@@ -25,7 +25,31 @@ namespace client{
     }
 
     Engine::Status Engine::runClient(){
+        m_fpsCounter.reset();
+        int frame = 0;
+        while(m_status==Status::Ok){
+            mp_currentState = &m_stateHandler.peekState();
 
+            handleWindowEvents();
+            handleInput();
+            update();
+            render();
+
+            m_fpsCounter.update();
+
+            if(frame++ == 512){
+                std::cout<<"Frame Time: "<<m_fpsCounter.currentMsPerFrame()<<" ms"<<'\n'<<std::endl;
+                frame = 0;
+            }
+
+            m_stateHandler.update();
+            if(m_stateHandler.isEmpty()){
+                exit();
+            }
+        }
+        m_stateHandler.clear();
+
+        return m_status;
     }
 
     void Engine::handleInput(){
@@ -37,7 +61,12 @@ namespace client{
     }
 
     void Engine::render(){
+        SDL_SetRenderDrawColor(m_rendererSDL, 255, 255, 255, 255);
+        SDL_RenderClear(m_rendererSDL);
 
+        mp_currentState->render(*m_renderer);
+
+        SDL_RenderPresent(m_rendererSDL);
     }
 
     void Engine::handleWindowEvents(){

@@ -29,6 +29,8 @@ namespace client{
             Keyboard m_keyboard;
             Status m_status;
 
+            FPSCounter m_fpsCounter;
+
             StateHandler m_stateHandler;
             GameState *mp_currentState = nullptr;
 
