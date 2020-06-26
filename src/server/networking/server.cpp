@@ -11,12 +11,8 @@
 #include <thread>
 
 namespace server {
-    Server::Server(int maxConnections)
-        : m_clientSessions(maxConnections)
-        , m_clientStatuses(maxConnections)
-    {
-        std::fill(m_clientStatuses.begin(), m_clientStatuses.end(),
-                  ClientStatus::Disconnected);
+    Server::Server(int maxConnections):m_clientSessions(maxConnections), m_clientStatuses(maxConnections){
+        std::fill(m_clientStatuses.begin(), m_clientStatuses.end(),ClientStatus::Disconnected);
 
         m_socket.setBlocking(false);
         m_socket.bind(PORT);
@@ -31,8 +27,7 @@ namespace server {
         m_isRunning = true;
     }
 
-    void Server::run(sf::Time timeout)
-    {
+    void Server::run(sf::Time timeout){
         sf::Clock dtClock;
         while (m_isRunning) {
             std::this_thread::sleep_for(std::chrono::milliseconds(33));
@@ -52,13 +47,11 @@ namespace server {
         }
     }
 
-    bool Server::isRunning() const
-    {
+    bool Server::isRunning() const{
         return m_isRunning;
     }
 
-    int Server::findEmptySlot()
-    {
+    int Server::findEmptySlot(){
         for (int i = 0; i < m_maxConnections; i++) {
             if (m_clientStatuses[i] == ClientStatus::Disconnected) {
                 return i;
@@ -67,8 +60,7 @@ namespace server {
         return -1;
     }
 
-    void Server::recievePackets()
-    {
+    void Server::recievePackets(){
         PackagedCommand package;
         while (getFromClient(package)) {
             auto &packet = package.packet;
@@ -88,8 +80,7 @@ namespace server {
         }
     }
 
-    void Server::update(float dt)
-    {
+    void Server::update(float dt){
         // Handle key input
         for (int i = 0; i < m_maxConnections; i++) {
             auto &input = m_clientSessions[i].keyState;
@@ -102,22 +93,17 @@ namespace server {
             };
 
             float speed = 0.8f;
-            float s = speed;
             if (isPressed(KeyInput::Right)) {
-                /* velocity.x += -glm::cos(glm::radians(rotation.y + 90)) * s;
-                velocity.z += -glm::sin(glm::radians(rotation.y + 90)) * s; */
+                velocity.x+=speed;
             }
             else if (isPressed(KeyInput::Left)) {
-                /* velocity.x += glm::cos(glm::radians(rotation.y + 90)) * speed;
-                velocity.z += glm::sin(glm::radians(rotation.y + 90)) * speed; */
+                velocity.x-=speed;
             }
             if (isPressed(KeyInput::Up)) {
-                /* velocity.x += -glm::cos(glm::radians(rotation.y)) * speed;
-                velocity.z += -glm::sin(glm::radians(rotation.y)) * speed; */
+                velocity.y-=speed;
             }
             else if (isPressed(KeyInput::Down)) {
-                /* velocity.x += glm::cos(glm::radians(rotation.y)) * speed;
-                velocity.z += glm::sin(glm::radians(rotation.y)) * speed; */
+                velocity.y+=speed;
             }
             position += velocity * dt;
             velocity *= 0.85f;
