@@ -19,7 +19,7 @@ namespace client{
                 m_gameStates.pop();
             }
         }
-        if(!isEmpty){
+        if(!isEmpty()){
             peekState().onEnter();
         }
     }

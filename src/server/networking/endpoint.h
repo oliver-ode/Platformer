@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Network/IpAddress.hpp>
-#include <common/network/constants.h>
-#include <common/types.h>
+#include "../../common/network/constants.h"
+#include "../../common/types.h"
 
 namespace server {
     struct ClientSession {

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <array>
-#include <common/network/constants.h>
-#include <common/types.h>
+#include "../../common/network/constants.h"
+#include "../../common/types.h"
 #include <glm/glm.hpp>
 
 namespace client{

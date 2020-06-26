@@ -2,8 +2,8 @@
 
 #include <SFML/Network/Packet.hpp>
 
-#include <common/network/commands.h>
-#include <common/network/input_state.h>
+#include "../../common/network/commands.h"
+#include "../../common/network/input_state.h"
 
 #include <ctime>
 #include <iostream>
@@ -28,7 +28,6 @@ namespace server {
             entity.alive = false;
         }
         m_entities[maxConnections + 1].alive = true;
-        m_entities[maxConnections + 1].transform.position = {20, 1, 20};
         m_isRunning = true;
     }
 
@@ -95,7 +94,7 @@ namespace server {
         for (int i = 0; i < m_maxConnections; i++) {
             auto &input = m_clientSessions[i].keyState;
             auto &entity = m_entities[i];
-            auto &position = entity.transform.position;
+            auto &position = entity.pos;
             auto &velocity = entity.velocity;
 
             auto isPressed = [input](KeyInput key) {
@@ -125,64 +124,51 @@ namespace server {
         }
     }
 
-    void Server::sendPackets()
-    {
+    void Server::sendPackets(){
         sf::Packet statePacket;
-        statePacket << CommandToClient::WorldState
-                    << static_cast<u16>(m_entities.size());
+        statePacket<<CommandToClient::WorldState<<static_cast<u16>(m_entities.size());
         for (u16 entityId = 0; entityId < m_entities.size(); entityId++) {
             if (m_entities[entityId].alive) {
-                auto &transform = m_entities[entityId].transform;
-                statePacket << entityId << transform.position.x
-                            << transform.position.y << transform.position.z;
+                auto &position = m_entities[entityId].pos;
+                statePacket<<entityId<<position.x<<position.y;
             }
         }
         sendToAllClients(statePacket);
     }
 
-    void Server::handleKeyInput(sf::Packet &packet)
-    {
+    void Server::handleKeyInput(sf::Packet &packet){
         ClientId client;
 
         packet >> client;
         packet >> m_clientSessions[client].keyState;
     }
 
-    bool Server::sendToClient(ClientId id, sf::Packet &packet)
-    {
+    bool Server::sendToClient(ClientId id, sf::Packet &packet){
         if (m_clientStatuses[id] == ClientStatus::Connected) {
-            return m_socket.send(packet, m_clientSessions[id].address,
-                                 m_clientSessions[id].port) == sf::Socket::Done;
+            return m_socket.send(packet, m_clientSessions[id].address,m_clientSessions[id].port) == sf::Socket::Done;
         }
         return false;
     }
 
-    void Server::sendToAllClients(sf::Packet &packet)
-    {
+    void Server::sendToAllClients(sf::Packet &packet){
         for (int i = 0; i < m_maxConnections; i++) {
             sendToClient(i, packet);
         }
     }
 
-    bool Server::getFromClient(PackagedCommand &package)
-    {
-        if (m_socket.receive(package.packet, package.address, package.port) ==
-            sf::Socket::Done) {
+    bool Server::getFromClient(PackagedCommand &package){
+        if (m_socket.receive(package.packet, package.address, package.port) ==sf::Socket::Done) {
             package.packet >> package.command;
             return true;
         }
         return false;
     }
 
-    void Server::handleIncomingConnection(const sf::IpAddress &clientAddress,
-                                          Port clientPort)
-    {
+    void Server::handleIncomingConnection(const sf::IpAddress &clientAddress,Port clientPort){
         std::cout << "Connection request got\n";
 
-        auto sendRejection = [this](ConnectionResult result,
-                                    const sf::IpAddress &address, Port port) {
-            auto rejectPacket =
-                createCommandPacket(CommandToClient::ConnectRequestResult);
+        auto sendRejection = [this](ConnectionResult result,const sf::IpAddress &address, Port port) {
+            auto rejectPacket =createCommandPacket(CommandToClient::ConnectRequestResult);
             rejectPacket << result;
             m_socket.send(rejectPacket, address, port);
         };
@@ -203,15 +189,12 @@ namespace server {
             }
             // Connection can be made
             sf::Packet responsePacket;
-            responsePacket << CommandToClient::ConnectRequestResult
-                           << ConnectionResult::Success
-                           << static_cast<ClientId>(slot)
-                           << static_cast<u8>(m_maxConnections);
+            responsePacket<<CommandToClient::ConnectRequestResult<<ConnectionResult::Success<<static_cast<ClientId>(slot)<<static_cast<u8>(m_maxConnections);
 
             m_clientStatuses[slot] = ClientStatus::Connected;
             m_clientSessions[slot].address = clientAddress;
             m_clientSessions[slot].port = clientPort;
-            m_entities[slot].transform.position = {10, 0, 10};
+            m_entities[slot].pos = {10, 0};
             m_entities[slot].alive = true;
 
             m_aliveEntities++;
@@ -225,14 +208,12 @@ namespace server {
             sendToAllClients(joinPack);
         }
         else {
-            sendRejection(ConnectionResult::GameFull, clientAddress,
-                          clientPort);
+            sendRejection(ConnectionResult::GameFull, clientAddress,clientPort);
         }
         std::cout << std::endl;
     }
 
-    void Server::handleDisconnect(sf::Packet &packet)
-    {
+    void Server::handleDisconnect(sf::Packet &packet){
         ClientId client;
         packet >> client;
         m_clientStatuses[client] = ClientStatus::Disconnected;

@@ -3,10 +3,10 @@
 #include <SFML/Network/IpAddress.hpp>
 #include <SFML/Network/UdpSocket.hpp>
 
-#include <common/network/commands.h>
-#include <common/network/input_state.h>
+#include "../../common/network/commands.h"
+#include "../../common/network/input_state.h"
 
-#include <client/game/entity.h>
+#include "../game/entity.h"
 
 namespace client {
     class Client final {

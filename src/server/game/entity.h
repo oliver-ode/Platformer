@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <common/types.h>
+#include "../../common/types.h"
 #include <glm/glm.hpp>
 
 namespace server{
