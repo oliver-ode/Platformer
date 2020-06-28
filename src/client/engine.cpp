@@ -18,6 +18,8 @@ namespace client{
                 std::cout<<"Renderer created!"<<std::endl;
             }
             m_status = Status::Ok;
+            m_stateHandler.pushState<PlayingState>(m_stateHandler);
+            m_renderer = std::make_unique<Renderer>();
         }
         else{
             m_status = Status::GLInitError;
@@ -63,8 +65,9 @@ namespace client{
     void Engine::render(){
         SDL_SetRenderDrawColor(m_rendererSDL, 255, 255, 255, 255);
         SDL_RenderClear(m_rendererSDL);
-
+        SDL_SetRenderDrawColor(m_rendererSDL, 255, 0, 0, 255);
         mp_currentState->render(*m_renderer);
+        m_renderer->render(*m_rendererSDL);
 
         SDL_RenderPresent(m_rendererSDL);
     }

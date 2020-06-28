@@ -1,5 +1,7 @@
 #include "renderer.h"
 
+#include <iostream>
+
 #include "../game/entity.h"
 
 namespace client{
@@ -18,6 +20,8 @@ namespace client{
             temp->y=batch.y;
             temp->w=40;
             temp->h=100;
+
+            std::cout<<"Drawing at: "<<batch.x<<", "<<batch.y<<std::endl;
 
             SDL_RenderFillRect(&renderer, temp);
         }

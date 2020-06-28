@@ -121,16 +121,18 @@ namespace client {
         return false;
     }
 
-    void Client::handleWorldState(sf::Packet &packet)
-    {
+    void Client::handleWorldState(sf::Packet &packet){
         u16 count;
         packet >> count;
         for (unsigned i = 0; i < count; i++) {
             EntityId id;
             packet >> id;
             auto &entity = mp_entities[id];
+            auto &position = entity.pos;
 
             entity.alive = true;
+            packet>>position.x;
+            packet>>position.y;
         }
     }
 

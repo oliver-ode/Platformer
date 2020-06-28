@@ -180,7 +180,7 @@ namespace server {
             m_clientStatuses[slot] = ClientStatus::Connected;
             m_clientSessions[slot].address = clientAddress;
             m_clientSessions[slot].port = clientPort;
-            m_entities[slot].pos = {10, 0};
+            m_entities[slot].pos = {100, 100};
             m_entities[slot].alive = true;
 
             m_aliveEntities++;

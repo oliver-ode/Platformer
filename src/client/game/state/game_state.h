@@ -16,9 +16,9 @@ namespace client{
             virtual void handleKeyDown([[maybe_unused]] int keyCode){}
             virtual void handleKeyUp([[maybe_unused]] int keyCode){}
 
-            virtual void handleInput(const Keyboard &keyboard, const SDL_Window &window) = 0; //parameters
+            virtual void handleInput(const Keyboard &keyboard, const SDL_Window &window) = 0; 
             virtual void update() = 0;
-            virtual void render(Renderer &renderer) = 0; //parameters
+            virtual void render(Renderer &renderer) = 0;
 
             // Called when state is entered
             virtual void onEnter(){}
