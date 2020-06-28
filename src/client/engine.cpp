@@ -14,7 +14,6 @@ namespace client{
             if(m_window)std::cout<<"Window created!"<<std::endl;
             m_rendererSDL=SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             if(m_rendererSDL){
-                SDL_SetRenderDrawColor(m_rendererSDL, 255, 255, 255, 255);
                 std::cout<<"Renderer created!"<<std::endl;
             }
             m_status = Status::Ok;
@@ -65,6 +64,7 @@ namespace client{
     void Engine::render(){
         SDL_SetRenderDrawColor(m_rendererSDL, 255, 255, 255, 255);
         SDL_RenderClear(m_rendererSDL);
+        
         SDL_SetRenderDrawColor(m_rendererSDL, 255, 0, 0, 255);
         mp_currentState->render(*m_renderer);
         m_renderer->render(*m_rendererSDL);
@@ -100,5 +100,8 @@ namespace client{
 
     void Engine::exit(){
         m_status = Status::Exit;
+        SDL_DestroyWindow(m_window);
+        SDL_DestroyRenderer(m_rendererSDL);
+        SDL_Quit();
     }
 }

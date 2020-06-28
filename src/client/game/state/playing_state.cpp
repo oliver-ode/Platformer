@@ -38,7 +38,7 @@ namespace client{
             m_inputState |= KeyInput::Down;
         }
 
-        m_client.sendInput(m_inputState);
+        if(m_inputState!=0) m_client.sendInput(m_inputState);
     }
 
     void PlayingState::update(){
@@ -48,7 +48,9 @@ namespace client{
     void PlayingState::render(Renderer &renderer){
         unsigned i = 0;
         for(const auto &e : m_entities){
-            if(e.alive && i++ != m_client.getClientId()){
+            i++;
+            if(e.alive){ // && i++ != m_client.getClientId()
+                std::cout<<"Actually printing something"<<std::endl;
                 renderer.process(e);
             }
         }

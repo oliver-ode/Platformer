@@ -23,7 +23,7 @@ namespace server {
         for (auto& entity : m_entities) {
             entity.alive = false;
         }
-        m_entities[maxConnections + 1].alive = true;
+        // m_entities[maxConnections + 1].alive = true;
         m_isRunning = true;
     }
 
@@ -66,6 +66,7 @@ namespace server {
             auto &packet = package.packet;
             switch (package.command) {
                 case CommandToServer::KeyInput:
+                    std::cout<<"Incoming key input packet"<<std::endl;
                     handleKeyInput(packet);
                     break;
 
@@ -117,6 +118,7 @@ namespace server {
             if (m_entities[entityId].alive) {
                 auto &position = m_entities[entityId].pos;
                 statePacket<<entityId<<position.x<<position.y;
+                std::cout<<position.x<<":"<<position.y<<std::endl;
             }
         }
         sendToAllClients(statePacket);
@@ -170,8 +172,7 @@ namespace server {
         if (m_connections < m_maxConnections) {
             auto slot = findEmptySlot();
             if (slot < 0) {
-                sendRejection(ConnectionResult::GameFull, clientAddress,
-                              clientPort);
+                sendRejection(ConnectionResult::GameFull, clientAddress, clientPort);
             }
             // Connection can be made
             sf::Packet responsePacket;
@@ -180,7 +181,7 @@ namespace server {
             m_clientStatuses[slot] = ClientStatus::Connected;
             m_clientSessions[slot].address = clientAddress;
             m_clientSessions[slot].port = clientPort;
-            m_entities[slot].pos = {100, 100};
+            m_entities[slot].pos = {0, 0};
             m_entities[slot].alive = true;
 
             m_aliveEntities++;
