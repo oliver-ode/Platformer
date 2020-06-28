@@ -14,7 +14,7 @@ namespace client{
             bool isKeyReleased(int keyCode) const;
         private:
             void resetKeys();
-
+            
             int keySize = 123;
             std::array<bool, 123> m_keys;
             int m_recentlyReleased;

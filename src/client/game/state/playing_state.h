@@ -30,5 +30,7 @@ namespace client{
             EntityArray m_entities;
             Client m_client;
             Input m_inputState = 0;
+
+            bool m_sentEmpty = false;
     };
 }

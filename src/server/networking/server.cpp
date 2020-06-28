@@ -93,7 +93,7 @@ namespace server {
                 return (input & key) == key;
             };
 
-            float speed = 0.8f;
+            float speed = 2.0f;
             if (isPressed(KeyInput::Right)) {
                 velocity.x+=speed;
             }

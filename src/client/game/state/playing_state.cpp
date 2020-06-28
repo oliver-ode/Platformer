@@ -37,8 +37,14 @@ namespace client{
         else if(keyboard.isKeyDown(SDLK_s)){
             m_inputState |= KeyInput::Down;
         }
-
-        if(m_inputState!=0) m_client.sendInput(m_inputState);
+        if(m_inputState != 0){
+            m_client.sendInput(m_inputState);
+            m_sentEmpty = false;
+        }
+        else if(m_sentEmpty == false){
+            m_client.sendInput(m_inputState);
+            m_sentEmpty = true;
+        }
     }
 
     void PlayingState::update(){
