@@ -1,3 +1,6 @@
 deps/
 .vscode/
 *.out
+*.map
+*.png
+trc/
