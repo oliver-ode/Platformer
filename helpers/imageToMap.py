@@ -10,6 +10,7 @@ imageExtension = input("What is the extension of the file: ")
 
 image = Image.open(imageName + "." + imageExtension)
 pixels = image.load()
+image.close()
 
 def index2d(ref):
     for valMap in mapper:
