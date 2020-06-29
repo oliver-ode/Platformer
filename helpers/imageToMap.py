@@ -1,7 +1,9 @@
 from PIL import Image
 
-mapper = [[(0, 0, 0, 0), 0], [(255, 0, 0, 255), 1], [(0, 255, 0, 255),
-          2], [(0, 0, 255, 255), 3]]
+mapper = [[(  0,   0,   0,   0), 0], 
+          [(255,   0,   0, 255), 1], 
+          [(  0, 255,   0, 255), 2], 
+          [(  0,   0, 255, 255), 3]]
 
 imageName = input("What is the name of the file: ")
 imageExtension = input("What is the extension of the file: ")
