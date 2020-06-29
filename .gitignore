@@ -4,3 +4,4 @@ deps/
 *.map
 *.png
 trc/
+src/_old
