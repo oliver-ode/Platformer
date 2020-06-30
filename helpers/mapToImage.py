@@ -6,7 +6,8 @@ mapper = [[(255, 255, 255, 255), 0],
           [(  0, 255,   0, 255), 2], 
           [(  0,   0, 255, 255), 3]]
 
-mapName = input("What is the name of the map: ")
+#mapName = input("What is the name of the map: ")
+mapName = "out"
 
 f = open(mapName+".map", "r")
 _map = f.read().split("\n")

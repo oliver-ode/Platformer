@@ -4,12 +4,13 @@ import random
 SETUP
 """
 # Constants
-WIDTH = 1000
-HEIGHT = 1000
+WIDTH = 200
+HEIGHT = 200
 SEED = None #If you want a random put "None"
 FILLPERCENT = 50
-SURROUND = 2
-SMOOTHING = 20
+SURROUND = 1
+GROW = 4
+SMOOTHING = 10
 
 # Variables
 _map = []
@@ -71,9 +72,9 @@ for i in range(SMOOTHING):
     for y in range(HEIGHT):
         for x in range(WIDTH):
             neighbourWallTiles = surroundingWallCount(x, y)
-            if neighbourWallTiles>12:
+            if neighbourWallTiles>GROW:
                 newMap[y][x]=1
-            elif neighbourWallTiles<12:
+            elif neighbourWallTiles<GROW:
                 newMap[y][x]=0
             else:
                 newMap[y][x]=_map[y][x]

@@ -1,0 +1,2 @@
+python randomMap_cellular.py
+python mapToImage.py
