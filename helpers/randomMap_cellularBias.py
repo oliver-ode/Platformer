@@ -10,7 +10,7 @@ SEED = None #If you want a random put "None"
 FILLPERCENT = 50
 SURROUND = 1
 GROW = 4
-SMOOTHING = 20
+SMOOTHING = 7
 
 # Variables
 _map = []
@@ -50,6 +50,9 @@ def surroundingWallCount(gridX, gridY):
                     cnt+=_map[row][col]
             else:
                 cnt+=1
+    if gridX!=1 and gridX<WIDTH-1:
+        if _map[gridY][gridX-SURROUND]==0 and _map[gridY][gridX+SURROUND]==0:
+            cnt=0
     return cnt
 
 """
