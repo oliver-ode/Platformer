@@ -4,12 +4,12 @@ import random
 SETUP
 """
 # Constants
-WIDTH = 100
-HEIGHT = 100
-SEED = 12345 #If you want a random put "None"
+WIDTH = 1000
+HEIGHT = 1000
+SEED = None #If you want a random put "None"
 FILLPERCENT = 50
-SURROUND = 1
-SMOOTHING = 1
+SURROUND = 2
+SMOOTHING = 20
 
 # Variables
 _map = []
@@ -42,10 +42,10 @@ def fileWrite():
 
 def surroundingWallCount(gridX, gridY):
     cnt = 0
-    for row in range(gridY-SURROUND, gridY+SURROUND):
-        for col in range(gridX-SURROUND, gridX+SURROUND):
+    for row in range(gridY-SURROUND, gridY+SURROUND+1):
+        for col in range(gridX-SURROUND, gridX+SURROUND+1):
             if row!=0 and row<HEIGHT and col!=0 and col<WIDTH:
-                if row!=gridY and col!=gridX:
+                if row!=gridY or col!=gridX:
                     cnt+=_map[row][col]
             else:
                 cnt+=1
@@ -58,7 +58,7 @@ fillBlank(_map)
 
 for y in range(HEIGHT):
     for x in range(WIDTH):
-        _map[y][x] = 1 if random.randint(1, 100) >= FILLPERCENT else 0
+        _map[y][x] = 0 if random.randint(1, 100) > FILLPERCENT else 1
 
 for y in range(HEIGHT):
     for x in range(WIDTH):
@@ -71,11 +71,12 @@ for i in range(SMOOTHING):
     for y in range(HEIGHT):
         for x in range(WIDTH):
             neighbourWallTiles = surroundingWallCount(x, y)
-            if neighbourWallTiles>4:
+            if neighbourWallTiles>12:
                 newMap[y][x]=1
-            elif neighbourWallTiles<4:
+            elif neighbourWallTiles<12:
                 newMap[y][x]=0
             else:
                 newMap[y][x]=_map[y][x]
+    _map=newMap
 
 fileWrite()
