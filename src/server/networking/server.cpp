@@ -9,6 +9,9 @@
 #include <iostream>
 #include <random>
 #include <thread>
+#include <fstream>
+#include <string>
+#include <string.h>
 
 namespace server {
     Server::Server(int maxConnections):m_clientSessions(maxConnections), m_clientStatuses(maxConnections){
@@ -23,8 +26,28 @@ namespace server {
         for (auto& entity : m_entities) {
             entity.alive = false;
         }
-        // m_entities[maxConnections + 1].alive = true;
+        loadMap();
+
         m_isRunning = true;
+    }
+
+    void Server::loadMap(){
+        std::ifstream map_file("assets/tileset/map1.map");
+        if (!map_file) {
+            std::cout<<"Unable to open file"<<std::endl;
+        }
+
+        std::string line, c;
+        int col, row = 0;
+        while(getline(map_file, line)){
+            col = 0;
+            for(int i = 0; i < 27*2-1; i++){
+                c = line[i];
+                if(strcmp(c.c_str(), " ") != 0) {
+                    m_map[row][col] = stoi(c);
+                }
+            }
+        }
     }
 
     void Server::run(sf::Time timeout){

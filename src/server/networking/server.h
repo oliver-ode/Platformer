@@ -30,6 +30,8 @@ namespace server {
             Port port; // Port of the connection
         };
 
+        void loadMap(); // Loads game map
+
         int findEmptySlot(); // Loops through all of the connection slots and finds one which is free
 
         void recievePackets(); // Loops though all UDP packets and handles the corresponding commands - keyinput, connection and disconnection
@@ -61,5 +63,7 @@ namespace server {
         int m_maxConnections = 4; // Max connections
         int m_connections = 0; // Current amount of connections
         int m_aliveEntities = 0; // Current amount of alive entities
+
+        int m_map[15][27];
     };
 } // namespace server
