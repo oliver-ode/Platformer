@@ -129,10 +129,14 @@ namespace client {
             packet >> id;
             auto &entity = mp_entities[id];
             auto &position = entity.pos;
+            auto &state = entity.state;
+            auto &tick = entity.animationTick;
 
             entity.alive = true;
             packet>>position.x;
             packet>>position.y;
+            packet>>state;
+            packet>>tick;
         }
     }
 
