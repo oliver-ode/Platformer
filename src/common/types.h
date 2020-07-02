@@ -15,3 +15,7 @@ using EntityId = u16;
 using Command = u8;
 
 using Input = u8;
+
+// Storing entity values using bits
+using MovementState = u8;
+using EntityHit = u8;

@@ -5,7 +5,7 @@
 namespace client{
     class StateHandler;
     class Keyboard;
-    class Renderer; //possibly not?
+    class Renderer;
 
     // Base class for the different game states
     class GameState{

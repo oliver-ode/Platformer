@@ -52,11 +52,8 @@ namespace client{
     }
 
     void PlayingState::render(Renderer &renderer){
-        unsigned i = 0;
         for(const auto &e : m_entities){
-            i++;
-            if(e.alive){ // && i++ != m_client.getClientId()
-                std::cout<<"Actually printing something"<<std::endl;
+            if(e.alive){
                 renderer.process(e);
             }
         }

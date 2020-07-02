@@ -12,6 +12,9 @@ namespace server{
         glm::vec2 velocity{0.0f};
 
         u8 alive = 0;
+
+        float movementSpeed; // Movement speed of the player
+        float jumpHeight; // Jump height of the player
     };
     using EntityArray = std::array<Entity, ENTITY_COUNT>;
 }
