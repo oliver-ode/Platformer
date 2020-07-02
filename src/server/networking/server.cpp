@@ -117,8 +117,9 @@ namespace server {
         for (u16 entityId = 0; entityId < m_entities.size(); entityId++) {
             if (m_entities[entityId].alive) {
                 auto &position = m_entities[entityId].pos;
-                statePacket<<entityId<<position.x<<position.y;
-                std::cout<<position.x<<":"<<position.y<<std::endl;
+                auto &state = m_entities[entityId].state;
+                auto &tick = m_entities[entityId].animationTick;
+                statePacket<<entityId<<position.x<<position.y<<state<<tick;
             }
         }
         sendToAllClients(statePacket);
@@ -183,6 +184,11 @@ namespace server {
             m_clientSessions[slot].port = clientPort;
             m_entities[slot].pos = {0, 0};
             m_entities[slot].alive = true;
+            m_entities[slot].jumpHeight = 25.0f;
+            m_entities[slot].movementSpeed = 3.0f;
+            m_entities[slot].hitted = 0;
+            m_entities[slot].animationTick = 0;
+            m_entities[slot].state = 0;
 
             m_aliveEntities++;
             m_socket.send(responsePacket, clientAddress, clientPort);
