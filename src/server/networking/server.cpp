@@ -113,10 +113,10 @@ namespace server {
                 return (input & key) == key;
             };
 
-            if (isPressed(KeyInput::Right)) {
+            if (isPressed(KeyInput::Right) && !colliding(entity, Hit::Right)) {
                 velocity.x+=entity.movementSpeed;
             }
-            else if (isPressed(KeyInput::Left)) {
+            else if (isPressed(KeyInput::Left) && !colliding(entity, Hit::Left)) {
                 velocity.x-=entity.movementSpeed;
             }
             if (isPressed(KeyInput::Up) && colliding(entity, Hit::Bottom)) {
@@ -126,7 +126,29 @@ namespace server {
                 velocity.y+=speed;
             } */
             position += velocity * dt;
-            velocity *= 0.5f; // Friction - how fast the value deteriorates
+            velocity.x *= 0.5f; // Friction - no friction wanted on y axis
+        }
+    }
+
+    bool Server::colliding(Entity &entity, EntityHit side){
+        // Collision logic
+        if(side==Hit::Bottom){
+            if(fmod(entity.pos.x, 1)==0){
+                if(m_map[(int)entity.pos.y+3][(int)entity.pos.x]==1 || m_map[(int)entity.pos.y+3][(int)entity.pos.x+1]==1) return true;
+                else return false;
+            }
+            else{
+                if(m_map[(int)entity.pos.y+3][(int)entity.pos.x]==1 || m_map[(int)entity.pos.y+3][(int)entity.pos.x+1]==1 || m_map[(int)entity.pos.y+3][(int)entity.pos.x+2]==1) return true;
+                else return false;
+            }
+        }
+        else if(side==Hit::Left){
+            if(m_map[(int)entity.pos.y][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+1][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+2][(int)entity.pos.x-1]==1) return true;
+            else return false;
+        }
+        else if(side==Hit::Right){
+            if(m_map[(int)entity.pos.y][(int)(entity.pos.x+0.5f)+2]==1 || m_map[(int)entity.pos.y+1][(int)(entity.pos.x+0.5f)+2]==1 || m_map[(int)entity.pos.y+2][(int)(entity.pos.x+0.5f)+2]==1) return true;
+            else return false;
         }
     }
 
