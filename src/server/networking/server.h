@@ -12,6 +12,8 @@
 #include "endpoint.h"
 #include "../game/entity.h"
 #include "../../common/network/commands.h"
+#include "../../common/util/entityInfo.h"
+#include "../../common/network/input_state.h"
 
 namespace server {
     class Server final {
@@ -31,6 +33,7 @@ namespace server {
         };
 
         void loadMap(); // Loads game map
+        bool colliding(Entity entity, EntityHit side);
 
         int findEmptySlot(); // Loops through all of the connection slots and finds one which is free
 

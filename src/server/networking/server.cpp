@@ -2,9 +2,6 @@
 
 #include <SFML/Network/Packet.hpp>
 
-#include "../../common/network/commands.h"
-#include "../../common/network/input_state.h"
-
 #include <ctime>
 #include <iostream>
 #include <random>
@@ -116,21 +113,20 @@ namespace server {
                 return (input & key) == key;
             };
 
-            float speed = 2.0f;
             if (isPressed(KeyInput::Right)) {
-                velocity.x+=speed;
+                velocity.x+=entity.movementSpeed;
             }
             else if (isPressed(KeyInput::Left)) {
-                velocity.x-=speed;
+                velocity.x-=entity.movementSpeed;
             }
-            if (isPressed(KeyInput::Up)) {
-                velocity.y-=speed;
+            if (isPressed(KeyInput::Up) && colliding(entity, Hit::Bottom)) {
+                // velocity.y-=entity.movementSpeed;
             }
-            else if (isPressed(KeyInput::Down)) {
+            /* else if (isPressed(KeyInput::Down)) {
                 velocity.y+=speed;
-            }
+            } */
             position += velocity * dt;
-            velocity *= 0.85f;
+            velocity *= 0.5f; // Friction - how fast the value deteriorates
         }
     }
 
@@ -208,7 +204,7 @@ namespace server {
             m_entities[slot].pos = {0, 0};
             m_entities[slot].alive = true;
             m_entities[slot].jumpHeight = 25.0f;
-            m_entities[slot].movementSpeed = 3.0f;
+            m_entities[slot].movementSpeed = 1.0f;
             m_entities[slot].hitted = 0;
             m_entities[slot].animationTick = 0;
             m_entities[slot].state = 0;
