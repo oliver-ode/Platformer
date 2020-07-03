@@ -68,5 +68,6 @@ namespace server {
         int m_aliveEntities = 0; // Current amount of alive entities
 
         int m_map[15][27];
+        float m_gravity = 0.2f;
     };
 } // namespace server

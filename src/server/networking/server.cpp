@@ -120,13 +120,42 @@ namespace server {
                 velocity.x-=entity.movementSpeed;
             }
             if (isPressed(KeyInput::Up) && colliding(entity, Hit::Bottom)) {
-                // velocity.y-=entity.movementSpeed;
+                velocity.y-=entity.jumpHeight;
             }
             /* else if (isPressed(KeyInput::Down)) {
                 velocity.y+=speed;
             } */
             position += velocity * dt;
             velocity.x *= 0.5f; // Friction - no friction wanted on y axis
+            
+
+            // Animation states
+            if(velocity.x==0 && velocity.y==0){ // Idle
+                if(entity.state==Movement::Idle) entity.animationTick++;
+                else{
+                    entity.state=Movement::Idle;
+                    entity.animationTick=0;
+                }
+            }
+            
+            if(!colliding(entity, Hit::Bottom)){ // Falling/jumping + gravity
+                velocity.y+=m_gravity;
+                if(velocity.y>0){
+                    if(entity.state==Movement::Falling) entity.animationTick++;
+                    else{
+                        entity.state=Movement::Falling;
+                        entity.animationTick=0;
+                    }
+                }
+                else if(velocity.y<0){
+                    if(entity.state==Movement::Jumping) entity.animationTick++;
+                    else{
+                        entity.state=Movement::Jumping;
+                        entity.animationTick=0;
+                    }
+                }
+            }
+            else velocity.y=0.0f;
         }
     }
 
@@ -142,6 +171,7 @@ namespace server {
                 else return false;
             }
         }
+        // Allow for colliding while in the air (aka 4 points to reference)
         else if(side==Hit::Left){
             if(m_map[(int)entity.pos.y][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+1][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+2][(int)entity.pos.x-1]==1) return true;
             else return false;
@@ -225,8 +255,8 @@ namespace server {
             m_clientSessions[slot].port = clientPort;
             m_entities[slot].pos = {0, 0};
             m_entities[slot].alive = true;
-            m_entities[slot].jumpHeight = 25.0f;
-            m_entities[slot].movementSpeed = 1.0f;
+            m_entities[slot].jumpHeight = 3.0f;
+            m_entities[slot].movementSpeed = 0.2f;
             m_entities[slot].hitted = 0;
             m_entities[slot].animationTick = 0;
             m_entities[slot].state = 0;
