@@ -2,13 +2,13 @@
 
 #include <SFML/Network/Packet.hpp>
 
-#include "../../common/network/commands.h"
-#include "../../common/network/input_state.h"
-
 #include <ctime>
 #include <iostream>
 #include <random>
 #include <thread>
+#include <fstream>
+#include <string>
+#include <string.h>
 
 namespace server {
     Server::Server(int maxConnections):m_clientSessions(maxConnections), m_clientStatuses(maxConnections){
@@ -23,8 +23,28 @@ namespace server {
         for (auto& entity : m_entities) {
             entity.alive = false;
         }
-        // m_entities[maxConnections + 1].alive = true;
+        loadMap();
+
         m_isRunning = true;
+    }
+
+    void Server::loadMap(){
+        std::ifstream map_file("assets/tileset/map1.map");
+        if (!map_file) {
+            std::cout<<"Unable to open file"<<std::endl;
+        }
+
+        std::string line, c;
+        int col, row = 0;
+        while(getline(map_file, line)){
+            col = 0;
+            for(int i = 0; i < 27*2-1; i++){
+                c = line[i];
+                if(strcmp(c.c_str(), " ") != 0) {
+                    m_map[row][col] = stoi(c);
+                }
+            }
+        }
     }
 
     void Server::run(sf::Time timeout){
@@ -93,21 +113,72 @@ namespace server {
                 return (input & key) == key;
             };
 
-            float speed = 2.0f;
-            if (isPressed(KeyInput::Right)) {
-                velocity.x+=speed;
+            if (isPressed(KeyInput::Right) && !colliding(entity, Hit::Right)) {
+                velocity.x+=entity.movementSpeed;
             }
-            else if (isPressed(KeyInput::Left)) {
-                velocity.x-=speed;
+            else if (isPressed(KeyInput::Left) && !colliding(entity, Hit::Left)) {
+                velocity.x-=entity.movementSpeed;
             }
-            if (isPressed(KeyInput::Up)) {
-                velocity.y-=speed;
+            if (isPressed(KeyInput::Up) && colliding(entity, Hit::Bottom)) {
+                velocity.y-=entity.jumpHeight;
             }
-            else if (isPressed(KeyInput::Down)) {
+            /* else if (isPressed(KeyInput::Down)) {
                 velocity.y+=speed;
-            }
+            } */
             position += velocity * dt;
-            velocity *= 0.85f;
+            velocity.x *= 0.5f; // Friction - no friction wanted on y axis
+            
+
+            // Animation states
+            if(velocity.x==0 && velocity.y==0){ // Idle
+                if(entity.state==Movement::Idle) entity.animationTick++;
+                else{
+                    entity.state=Movement::Idle;
+                    entity.animationTick=0;
+                }
+            }
+            
+            if(!colliding(entity, Hit::Bottom)){ // Falling/jumping + gravity
+                velocity.y+=m_gravity;
+                if(velocity.y>0){
+                    if(entity.state==Movement::Falling) entity.animationTick++;
+                    else{
+                        entity.state=Movement::Falling;
+                        entity.animationTick=0;
+                    }
+                }
+                else if(velocity.y<0){
+                    if(entity.state==Movement::Jumping) entity.animationTick++;
+                    else{
+                        entity.state=Movement::Jumping;
+                        entity.animationTick=0;
+                    }
+                }
+            }
+            else velocity.y=0.0f;
+        }
+    }
+
+    bool Server::colliding(Entity &entity, EntityHit side){
+        // Collision logic
+        if(side==Hit::Bottom){
+            if(fmod(entity.pos.x, 1)==0){
+                if(m_map[(int)entity.pos.y+3][(int)entity.pos.x]==1 || m_map[(int)entity.pos.y+3][(int)entity.pos.x+1]==1) return true;
+                else return false;
+            }
+            else{
+                if(m_map[(int)entity.pos.y+3][(int)entity.pos.x]==1 || m_map[(int)entity.pos.y+3][(int)entity.pos.x+1]==1 || m_map[(int)entity.pos.y+3][(int)entity.pos.x+2]==1) return true;
+                else return false;
+            }
+        }
+        // Allow for colliding while in the air (aka 4 points to reference)
+        else if(side==Hit::Left){
+            if(m_map[(int)entity.pos.y][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+1][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+2][(int)entity.pos.x-1]==1) return true;
+            else return false;
+        }
+        else if(side==Hit::Right){
+            if(m_map[(int)entity.pos.y][(int)(entity.pos.x+0.5f)+2]==1 || m_map[(int)entity.pos.y+1][(int)(entity.pos.x+0.5f)+2]==1 || m_map[(int)entity.pos.y+2][(int)(entity.pos.x+0.5f)+2]==1) return true;
+            else return false;
         }
     }
 
@@ -117,8 +188,9 @@ namespace server {
         for (u16 entityId = 0; entityId < m_entities.size(); entityId++) {
             if (m_entities[entityId].alive) {
                 auto &position = m_entities[entityId].pos;
-                statePacket<<entityId<<position.x<<position.y;
-                std::cout<<position.x<<":"<<position.y<<std::endl;
+                auto &state = m_entities[entityId].state;
+                auto &tick = m_entities[entityId].animationTick;
+                statePacket<<entityId<<position.x<<position.y<<state<<tick;
             }
         }
         sendToAllClients(statePacket);
@@ -183,6 +255,11 @@ namespace server {
             m_clientSessions[slot].port = clientPort;
             m_entities[slot].pos = {0, 0};
             m_entities[slot].alive = true;
+            m_entities[slot].jumpHeight = 3.0f;
+            m_entities[slot].movementSpeed = 0.2f;
+            m_entities[slot].hitted = 0;
+            m_entities[slot].animationTick = 0;
+            m_entities[slot].state = 0;
 
             m_aliveEntities++;
             m_socket.send(responsePacket, clientAddress, clientPort);
