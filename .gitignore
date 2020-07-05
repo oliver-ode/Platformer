@@ -3,6 +3,6 @@ deps/
 *.out
 *.map
 *.png
-trc/
-src/_old
+
 *.kra~
+sprites/
