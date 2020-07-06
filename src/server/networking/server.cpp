@@ -254,7 +254,7 @@ namespace server {
             m_clientStatuses[slot] = ClientStatus::Connected;
             m_clientSessions[slot].address = clientAddress;
             m_clientSessions[slot].port = clientPort;
-            m_entities[slot].pos = {0, 0};
+            m_entities[slot].pos = {5, 5};
             m_entities[slot].alive = true;
             m_entities[slot].jumpHeight = 3.0f;
             m_entities[slot].movementSpeed = 0.2f;
