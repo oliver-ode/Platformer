@@ -3,10 +3,10 @@
 #include "../types.h"
 
 enum Hit : EntityHit {
-    Top = 1,
-    Bottom = 2,
-    Left = 4,
-    Right = 8,
+    TopHit = 1,
+    BottomHit = 2,
+    LeftHit = 4,
+    RightHit = 8,
 };
 
 enum Movement : MovementState {

@@ -29,7 +29,7 @@ namespace server {
     }
 
     void Server::loadMap(){
-        std::ifstream map_file("assets/tileset/map1.map");
+        std::ifstream map_file("assets/map/map1.map");
         if (!map_file) {
             std::cout<<"Unable to open file"<<std::endl;
         }
@@ -113,13 +113,13 @@ namespace server {
                 return (input & key) == key;
             };
 
-            if (isPressed(KeyInput::Right) && !colliding(entity, Hit::Right)) {
+            if (isPressed(KeyInput::Right) && !colliding(entity, Hit::RightHit)) {
                 velocity.x+=entity.movementSpeed;
             }
-            else if (isPressed(KeyInput::Left) && !colliding(entity, Hit::Left)) {
+            else if (isPressed(KeyInput::Left) && !colliding(entity, Hit::LeftHit)) {
                 velocity.x-=entity.movementSpeed;
             }
-            if (isPressed(KeyInput::Up) && colliding(entity, Hit::Bottom)) {
+            if (isPressed(KeyInput::Up) && colliding(entity, Hit::BottomHit)) {
                 velocity.y-=entity.jumpHeight;
             }
             /* else if (isPressed(KeyInput::Down)) {
@@ -138,7 +138,7 @@ namespace server {
                 }
             }
             
-            if(!colliding(entity, Hit::Bottom)){ // Falling/jumping + gravity
+            if(!colliding(entity, Hit::BottomHit)){ // Falling/jumping + gravity
                 velocity.y+=m_gravity;
                 if(velocity.y>0){
                     if(entity.state==Movement::Falling) entity.animationTick++;
@@ -161,7 +161,7 @@ namespace server {
 
     bool Server::colliding(Entity &entity, EntityHit side){
         // Collision logic
-        if(side==Hit::Bottom){
+        if(side==Hit::BottomHit){
             if(fmod(entity.pos.x, 1)==0){
                 if(m_map[(int)entity.pos.y+3][(int)entity.pos.x]==1 || m_map[(int)entity.pos.y+3][(int)entity.pos.x+1]==1) return true;
                 else return false;
@@ -172,14 +172,15 @@ namespace server {
             }
         }
         // Allow for colliding while in the air (aka 4 points to reference)
-        else if(side==Hit::Left){
+        else if(side==Hit::LeftHit){
             if(m_map[(int)entity.pos.y][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+1][(int)entity.pos.x-1]==1 || m_map[(int)entity.pos.y+2][(int)entity.pos.x-1]==1) return true;
             else return false;
         }
-        else if(side==Hit::Right){
+        else if(side==Hit::RightHit){
             if(m_map[(int)entity.pos.y][(int)(entity.pos.x+0.5f)+2]==1 || m_map[(int)entity.pos.y+1][(int)(entity.pos.x+0.5f)+2]==1 || m_map[(int)entity.pos.y+2][(int)(entity.pos.x+0.5f)+2]==1) return true;
             else return false;
         }
+        return false;
     }
 
     void Server::sendPackets(){
