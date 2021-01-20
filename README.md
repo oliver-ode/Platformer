@@ -1,5 +1,8 @@
 # Platformer
 
+## Background information
+This for me was one of the first major times that I decided to try and make a game and I decided to do something new and use C++ for graphics. I initially was trying to use OpenGL, but as it was my first time doing it, it was very daunting and it felt limiting for me as there were so many extra steps to do. I then decided to move to SDL2 and found that it was a lot easier and I started to enjoy it more. I was of the mindset that as I wanted it to be multiplayer, it would be better to implement it sooner rather than later. I had never done networking before so a lot of the underlying networking code that uses SFML is from a very early version of this [repo](https://github.com/Hopson97/open-builder). The entire project ended up fizzling out for more than one reason, but I still learned a lot from it and I still want to make a game at some point.
+
 The idea behind this game is a sort of platformer dungeon crawler game. Some of the main goals and ideas for it are:
 * Randomly generated caves/dungeons
 * Multiplayer exploration
